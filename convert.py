@@ -4,6 +4,8 @@ from csv import DictReader, DictWriter
 from codecs import BOM_UTF8, BOM_UTF16_LE, BOM_UTF16_BE, BOM_UTF32_LE, BOM_UTF32_BE
 from typing import Optional
 
+NBSP = '\xa0'
+
 BOOKING_DATE = 'Booking Date'
 BOOKING_DATE_HU = 'Könyvelés dátuma'
 AMOUNT = 'Amount'
@@ -59,6 +61,8 @@ def transform_row(row: dict, dictionary: dict) -> dict:
             new_row[NOTE] = f'{row[dictionary[NARRATIVE]]} ' \
                             f'{"Trn.type: " + (row[dictionary[TRANSACTION_TYPE]] or "-")} ' \
                             f'{"S.ref.: " + (row[dictionary[SENDER_REFERENCE]] or "-")}'
+        elif field == AMOUNT:
+            new_row[field] = row[dictionary[field]].replace(NBSP, '')
         else:
             new_row[field] = row[dictionary[field]]
 
